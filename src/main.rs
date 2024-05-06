@@ -159,8 +159,8 @@ fn setup_game(mut commands: Commands, windows: Query<&Window>) {
         }])
         .with_style(Style {
             position_type: PositionType::Absolute,
-                left: Val::Percent(40.0),
-                top: Val::Px(20.0),
+            left: Val::Percent(40.0),
+            top: Val::Px(20.0),
             ..Default::default()
         }),
     );
@@ -181,8 +181,8 @@ fn setup_game(mut commands: Commands, windows: Query<&Window>) {
         }])
         .with_style(Style {
             position_type: PositionType::Absolute,
-                right: Val::Percent(40.0),
-                top: Val::Px(20.0),
+            right: Val::Percent(40.0),
+            top: Val::Px(20.0),
             ..Default::default()
         }),
     );
