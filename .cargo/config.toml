@@ -1,5 +1,5 @@
 [target.wasm32-unknown-unknown]
-runner = "trunk"
+runner = "wasm-server-runner"
 linker = "lld"
 rustflags = ["-C", "target-feature=+crt-static"]
 

@@ -43,7 +43,6 @@ fn main() {
             primary_window: Some(Window {
                 name: Some("Pong".to_string()),
                 title: "Pong".to_string(),
-
                 ..Default::default()
             }),
             ..Default::default()
