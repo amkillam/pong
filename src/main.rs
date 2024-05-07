@@ -1,6 +1,11 @@
 use bevy::prelude::*;
 use rand::Rng;
 
+use mimalloc::MiMalloc;
+
+#[global_allocator]
+static GLOBAL: MiMalloc = MiMalloc;
+
 #[derive(Component)]
 struct Paddle {
     side: Side,
