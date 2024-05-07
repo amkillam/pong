@@ -4,7 +4,6 @@ WASM_SERVER_RUNNER_DIRECTORY = "./"
 
 [target.wasm32-unknown-unknown]
 runner = "wasm-server-runner"
-linker = "lld"
 rustflags = ["-C", "target-feature=+crt-static"]
 
 [target.x86_64-pc-windows-msvc]
