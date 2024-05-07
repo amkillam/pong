@@ -41,7 +41,13 @@ force-unwind-tables = "off"
 rand = "0.8.5"
 bevy = "0.13.2"
 blake3 = { version = "1.5.1", features = ["pure"] }
-mimalloc = { version = "0.1.41", optional = true }
+winit = { version = "0.29", default-features = false }
+image = { version = "0.24", default-features = false }
 
-[build-dependencies]
-rustflags = "0.1.6"
+[target.'cfg(not(target_family = "wasm"))'.dependencies]
+rand = "0.8.5"
+bevy = "0.13.2"
+blake3 = { version = "1.5.1", features = ["pure"] }
+winit = { version = "0.29", default-features = false }
+image = { version = "0.24", default-features = false }
+mimalloc = { version = "0.1.41" }
