@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, height=device-height,initial-scale=1, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <title>Pong</title>
+        
+        <link rel="icon" href="icon.ico">
+        <style>body, html {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    background-color: black;
+}
+
+#pong {
+    width: 100% !important;
+    height: 100% !important; 
+}
+</style>
+    
+<link rel="modulepreload" href="./pong-e16542ccc57e444d.js" crossorigin=anonymous integrity="sha384-iT1UKbtzQ1V70jR9KKoVU2yGdIqQw9xGbom0/QyXe1GoB7TVaRPpluuPYdpPYLmx">
+<link rel="preload" href="./pong-e16542ccc57e444d_bg.wasm" crossorigin=anonymous integrity="sha384-ruSCZPdn7GoMm5jCUXc6eZM7qiq5Ye/sincnmXbZS1dWvbZ7p7yutLlArxyFFeHM" as="fetch" type="application/wasm"></head>
+    <body>
+        <canvas id="pong">
+            Javascript and support for canvas is required
+        </canvas>
+    
+<script type="module">
+import init, * as bindings from './pong-e16542ccc57e444d.js';
+const wasm = await init('./pong-e16542ccc57e444d_bg.wasm');
+
+
+window.wasmBindings = bindings;
+
+
+dispatchEvent(new CustomEvent("TrunkApplicationStarted", {detail: {wasm}}));
+
+</script></body>
+</html>
+
