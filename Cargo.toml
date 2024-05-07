@@ -15,20 +15,33 @@ opt-level = 1
 
 # This is used by trunk as it doesn't support custom profiles: https://github.com/trunk-rs/trunk/issues/605
 [profile.release]
+strip = "symbols"
 opt-level = "s"
-lto = true
+lto = "fat"
 codegen-units = 1
-strip = true
+panic = "abort"
+relocation-model = "static"
+code-model = "tiny"
+overflow-checks = false
+force-unwind-tables = "off"
 
 # Profile for distribution
 [profile.dist]
+strip = "symbols"
 inherits = "release"
 opt-level = 3
-lto = true
+lto = "fat"
 codegen-units = 1
-strip = true
+panic = "abort"
+code-model = "tiny"
+overflow-checks = false
+force-unwind-tables = "off"
 
 [dependencies]
 rand = "0.8.5"
 bevy = "0.13.2"
-mimalloc = "0.1.41"
+blake3 = { version = "1.5.1", features = ["pure"] }
+mimalloc = { version = "0.1.41", optional = true }
+
+[build-dependencies]
+rustflags = "0.1.6"

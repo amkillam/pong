@@ -1,8 +1,10 @@
 use bevy::prelude::*;
 use rand::Rng;
 
+#[cfg(not(target_family = "wasm"))]
 use mimalloc::MiMalloc;
 
+#[cfg(not(target_family = "wasm"))]
 #[global_allocator]
 static GLOBAL: MiMalloc = MiMalloc;
 
