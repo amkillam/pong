@@ -6,7 +6,8 @@ A simple clone of the game Pong, made using the Bevy game engine.
 # How to Play
 This game can be played through one of the following methods.
   1. Compile and play locally
-  2. [Play in your browser via WebAssembly](https://amkillam.github.io/pong/).
+  2. Download one of the provided [releases](https://github.com/amkillam/pong/releases) and play locally
+  2. [Play in your browser via WebAssembly](https://amkillam.github.io/pong/)
 
 # Purpose
 The code for this game was written purely to familiarize myself with the Bevy game engine and basic ECS concepts. As such, the code was written fairly haphazardly in the span of a few hours. 
