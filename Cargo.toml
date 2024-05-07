@@ -31,3 +31,4 @@ strip = true
 [dependencies]
 rand = "0.8.5"
 bevy = "0.13.2"
+mimalloc = "0.1.41"
