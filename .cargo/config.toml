@@ -1,5 +1,5 @@
 [target.wasm32-unknown-unknown]
-runner = "wasm-server-runner"
+runner = "trunk"
 rustflags = ["-C", "target-feature=+crt-static"]
 
 [target.x86_64-pc-windows-msvc]
