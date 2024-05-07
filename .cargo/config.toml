@@ -1,6 +1,3 @@
-[unstable]
-build-std = ["std", "panic_abort"]
-
 [env]
 WASM_SERVER_RUNNER_CUSTOM_INDEX_HTML = "index.html"
 WASM_SERVER_RUNNER_DIRECTORY = "./"
