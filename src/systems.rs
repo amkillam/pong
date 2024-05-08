@@ -183,28 +183,26 @@ pub fn game_over(
         }
     }
 }
+
+type RestartEntities = (With<Score>, With<Text>, With<Paddle>, With<Ball>);
 pub fn restart_game(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     touch_input: Res<Touches>,
     mut commands: Commands,
     score_query: Query<&Score>,
-    score_entities: Query<Entity, With<Score>>,
-    text_entities: Query<Entity, With<Text>>,
-    paddle_entities: Query<Entity, With<Paddle>>,
-    ball_entities: Query<Entity, With<Ball>>,
+    entities: Query<Entity, RestartEntities>,
     windows: Query<&Window>,
 ) {
-
-        let restart_triggered = {
-            keyboard_input.just_pressed(KeyCode::KeyR) || (
-                touch_input.iter().any(|touch| touch_input.just_pressed(touch.id()))
-                && score_query.iter().filter(|score| score.value == 10).count() > 0
-            )
-        };
+    let restart_triggered = {
+        keyboard_input.just_pressed(KeyCode::KeyR)
+            || (touch_input
+                .iter()
+                .any(|touch| touch_input.just_pressed(touch.id()))
+                && score_query.iter().filter(|score| score.value == 10).count() > 0)
+    };
 
     if restart_triggered {
-
-        for entity in text_entities.iter().chain(paddle_entities.iter()).chain(ball_entities.iter().chain(score_entities.iter())) {
+        for entity in entities.iter() {
             commands.entity(entity).despawn();
         }
         setup_game(commands, windows);
@@ -220,17 +218,23 @@ pub fn move_paddles_with_touch(
     let half_window_width = window.width() / 2.0;
     let window_height = window.height();
     for finger in touch_input.iter() {
-            let mut adjusted_finger_y = -(finger.position().y * 2.0);
-            if adjusted_finger_y > window_height {
-                adjusted_finger_y = window_height;
-            }
-            if finger.position().x < half_window_width {
-               let mut left_paddle = paddles_query.iter_mut().filter(|(paddle, _)| paddle.side == Side::Left).next().unwrap();
+        let mut adjusted_finger_y = -(finger.position().y * 2.0);
+        if adjusted_finger_y > window_height {
+            adjusted_finger_y = window_height;
+        }
+        if finger.position().x < half_window_width {
+            let mut left_paddle = paddles_query
+                .iter_mut()
+                .find(|(paddle, _)| paddle.side == Side::Left)
+                .unwrap();
 
-                left_paddle.1.translation.y = adjusted_finger_y
-            } else {
-                let mut right_paddle = paddles_query.iter_mut().filter(|(paddle, _)| paddle.side == Side::Right).next().unwrap();
-                right_paddle.1.translation.y = adjusted_finger_y
-            }
+            left_paddle.1.translation.y = adjusted_finger_y
+        } else {
+            let mut right_paddle = paddles_query
+                .iter_mut()
+                .find(|(paddle, _)| paddle.side == Side::Right)
+                .unwrap();
+            right_paddle.1.translation.y = adjusted_finger_y
+        }
     }
 }

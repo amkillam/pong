@@ -4,7 +4,10 @@ mod setup;
 mod systems;
 
 use setup::{set_window_icon, setup_camera, setup_game};
-use systems::{check_new_goal, game_over, move_ball, move_paddles_with_keyboard, move_paddles_with_touch, restart_game};
+use systems::{
+    check_new_goal, game_over, move_ball, move_paddles_with_keyboard, move_paddles_with_touch,
+    restart_game,
+};
 
 #[cfg(not(target_family = "wasm"))]
 use mimalloc::MiMalloc;
