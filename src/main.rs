@@ -4,7 +4,7 @@ mod setup;
 mod systems;
 
 use setup::{set_window_icon, setup_camera, setup_game};
-use systems::{check_new_goal, game_over, move_ball, move_paddles, restart_game};
+use systems::{check_new_goal, game_over, move_ball, move_paddles_with_keyboard, move_paddles_with_touch, restart_game};
 
 #[cfg(not(target_family = "wasm"))]
 use mimalloc::MiMalloc;
@@ -55,7 +55,6 @@ fn main() {
                 title: "Pong".to_string(),
                 #[cfg(target_family = "wasm")]
                 canvas: Some("#pong".into()),
-                prevent_default_event_handling: false,
                 ..Default::default()
             }),
             ..Default::default()
@@ -66,7 +65,8 @@ fn main() {
             Update,
             (
                 move_ball,
-                move_paddles,
+                move_paddles_with_keyboard,
+                move_paddles_with_touch,
                 check_new_goal,
                 game_over,
                 restart_game,

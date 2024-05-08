@@ -5,7 +5,7 @@ use crate::{
 use bevy::prelude::*;
 use rand::Rng;
 
-pub fn move_paddles(
+pub fn move_paddles_with_keyboard(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     mut query: Query<(&mut Transform, &Paddle)>,
     windows: Query<&Window>,
@@ -36,7 +36,7 @@ pub fn move_paddles(
 
         let half_paddle_height = PADDLE_HEIGHT / 2.0;
         let max_paddle_y = half_window_height - half_paddle_height;
-        transform.translation.y += direction * half_window_height * 0.02;
+        transform.translation.y += direction * half_window_height * 0.03;
         transform.translation.y = transform.translation.y.clamp(-max_paddle_y, max_paddle_y);
     }
 }
@@ -185,26 +185,52 @@ pub fn game_over(
 }
 pub fn restart_game(
     keyboard_input: Res<ButtonInput<KeyCode>>,
+    touch_input: Res<Touches>,
     mut commands: Commands,
-    score: Query<Entity, With<Score>>,
-    text_query: Query<Entity, With<Text>>,
-    paddle_query: Query<Entity, With<Paddle>>,
-    ball_query: Query<Entity, With<Ball>>,
+    score_query: Query<&Score>,
+    score_entities: Query<Entity, With<Score>>,
+    text_entities: Query<Entity, With<Text>>,
+    paddle_entities: Query<Entity, With<Paddle>>,
+    ball_entities: Query<Entity, With<Ball>>,
     windows: Query<&Window>,
 ) {
-    if keyboard_input.just_pressed(KeyCode::KeyR) {
-        for entity in text_query.iter() {
-            commands.entity(entity).despawn();
-        }
-        for entity in paddle_query.iter() {
-            commands.entity(entity).despawn();
-        }
-        for entity in ball_query.iter() {
-            commands.entity(entity).despawn();
-        }
-        for entity in score.iter() {
+
+        let restart_triggered = {
+            keyboard_input.just_pressed(KeyCode::KeyR) || (
+                touch_input.iter().any(|touch| touch_input.just_pressed(touch.id()))
+                && score_query.iter().filter(|score| score.value == 10).count() > 0
+            )
+        };
+
+    if restart_triggered {
+
+        for entity in text_entities.iter().chain(paddle_entities.iter()).chain(ball_entities.iter().chain(score_entities.iter())) {
             commands.entity(entity).despawn();
         }
         setup_game(commands, windows);
+    }
+}
+
+pub fn move_paddles_with_touch(
+    touch_input: Res<Touches>,
+    mut paddles_query: Query<(&Paddle, &mut Transform)>,
+    windows: Query<&Window>,
+) {
+    let window = windows.iter().next().unwrap();
+    let half_window_width = window.width() / 2.0;
+    let window_height = window.height();
+    for finger in touch_input.iter() {
+            let mut adjusted_finger_y = -(finger.position().y * 2.0);
+            if adjusted_finger_y > window_height {
+                adjusted_finger_y = window_height;
+            }
+            if finger.position().x < half_window_width {
+               let mut left_paddle = paddles_query.iter_mut().filter(|(paddle, _)| paddle.side == Side::Left).next().unwrap();
+
+                left_paddle.1.translation.y = adjusted_finger_y
+            } else {
+                let mut right_paddle = paddles_query.iter_mut().filter(|(paddle, _)| paddle.side == Side::Right).next().unwrap();
+                right_paddle.1.translation.y = adjusted_finger_y
+            }
     }
 }
