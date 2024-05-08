@@ -195,9 +195,7 @@ pub fn restart_game(
 ) {
     let restart_triggered = {
         keyboard_input.just_pressed(KeyCode::KeyR)
-            || (touch_input
-                .iter()
-                .any(|touch| touch_input.just_pressed(touch.id()))
+            || (touch_input.any_just_pressed()
                 && score_query.iter().filter(|score| score.value == 10).count() > 0)
     };
 
