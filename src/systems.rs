@@ -195,9 +195,7 @@ pub fn restart_game(
 ) {
     let restart_triggered = {
         keyboard_input.just_pressed(KeyCode::KeyR)
-            || (touch_input
-                .iter()
-                .any(|touch| touch_input.just_pressed(touch.id()))
+            || (touch_input.any_just_pressed()
                 && score_query.iter().filter(|score| score.value == 10).count() > 0)
     };
 
@@ -218,7 +216,7 @@ pub fn move_paddles_with_touch(
     let half_window_width = window.width() / 2.0;
     let window_height = window.height();
     for finger in touch_input.iter() {
-        let mut adjusted_finger_y = -(finger.position().y * 2.0);
+        let mut adjusted_finger_y = finger.position().y / 2.0;
         if adjusted_finger_y > window_height {
             adjusted_finger_y = window_height;
         }
