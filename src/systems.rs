@@ -3,6 +3,7 @@ use crate::{
     BALL_RADIUS, PADDLE_HEIGHT, PADDLE_MARGIN, PADDLE_WIDTH,
 };
 use bevy::prelude::*;
+use bevy::input::touch::TouchPhase;
 use rand::Rng;
 
 pub fn move_paddles_with_keyboard(
@@ -184,23 +185,28 @@ pub fn game_over(
     }
 }
 
-type RestartEntities = (With<Score>, With<Text>, With<Paddle>, With<Ball>);
 pub fn restart_game(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     touch_input: Res<Touches>,
     mut commands: Commands,
     score_query: Query<&Score>,
-    entities: Query<Entity, RestartEntities>,
+    score_entties: Query<Entity, With<Score>>,
+    text_entities: Query<Entity, With<Text>>,
+    paddle_entities: Query<Entity, With<Paddle>>,
+    ball_entities: Query<Entity, With<Ball>>,
     windows: Query<&Window>,
 ) {
+
+    let entities = score_entties.iter().chain(text_entities.iter()).chain(paddle_entities.iter()).chain(ball_entities.iter());
+
     let restart_triggered = {
         keyboard_input.just_pressed(KeyCode::KeyR)
             || (touch_input.any_just_pressed()
-                && score_query.iter().filter(|score| score.value == 10).count() > 0)
+                && score_query.iter().find(|score| score.value == 10).is_some())
     };
 
     if restart_triggered {
-        for entity in entities.iter() {
+        for entity in entities.into_iter() {
             commands.entity(entity).despawn();
         }
         setup_game(commands, windows);
@@ -208,19 +214,25 @@ pub fn restart_game(
 }
 
 pub fn move_paddles_with_touch(
-    touch_input: Res<Touches>,
+    mut touch_input: EventReader<TouchInput>,
     mut paddles_query: Query<(&Paddle, &mut Transform)>,
     windows: Query<&Window>,
 ) {
     let window = windows.iter().next().unwrap();
     let half_window_width = window.width() / 2.0;
     let window_height = window.height();
-    for finger in touch_input.iter() {
-        let mut adjusted_finger_y = finger.position().y / 2.0;
+    for finger in touch_input.read() {
+        let mut adjusted_finger_y = match finger.phase {
+            TouchPhase::Moved => match finger.position.y {
+                y if y < 0.0 => -(y*2.0),
+                y => -(y/2.0)
+            }
+            _ => continue,
+        };
         if adjusted_finger_y > window_height {
             adjusted_finger_y = window_height;
         }
-        if finger.position().x < half_window_width {
+        if finger.position.x < half_window_width {
             let mut left_paddle = paddles_query
                 .iter_mut()
                 .find(|(paddle, _)| paddle.side == Side::Left)
