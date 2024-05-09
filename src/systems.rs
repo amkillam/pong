@@ -2,8 +2,8 @@ use crate::{
     get_window_dimensions, setup::setup_game, Ball, Border, Paddle, Score, Side, Velocity,
     BALL_RADIUS, PADDLE_HEIGHT, PADDLE_MARGIN, PADDLE_WIDTH,
 };
-use bevy::prelude::*;
 use bevy::input::touch::TouchPhase;
+use bevy::prelude::*;
 use rand::Rng;
 
 pub fn move_paddles_with_keyboard(
@@ -185,6 +185,8 @@ pub fn game_over(
     }
 }
 
+//Unavoidable when using Bevy queries
+#[allow(clippy::too_many_arguments)]
 pub fn restart_game(
     keyboard_input: Res<ButtonInput<KeyCode>>,
     touch_input: Res<Touches>,
@@ -196,13 +198,15 @@ pub fn restart_game(
     ball_entities: Query<Entity, With<Ball>>,
     windows: Query<&Window>,
 ) {
-
-    let entities = score_entties.iter().chain(text_entities.iter()).chain(paddle_entities.iter()).chain(ball_entities.iter());
+    let entities = score_entties
+        .iter()
+        .chain(text_entities.iter())
+        .chain(paddle_entities.iter())
+        .chain(ball_entities.iter());
 
     let restart_triggered = {
         keyboard_input.just_pressed(KeyCode::KeyR)
-            || (touch_input.any_just_pressed()
-                && score_query.iter().find(|score| score.value == 10).is_some())
+            || (touch_input.any_just_pressed() && score_query.iter().any(|score| score.value == 10))
     };
 
     if restart_triggered {
@@ -224,9 +228,9 @@ pub fn move_paddles_with_touch(
     for finger in touch_input.read() {
         let mut adjusted_finger_y = match finger.phase {
             TouchPhase::Moved => match finger.position.y {
-                y if y < 0.0 => -(y*2.0),
-                y => -(y/2.0)
-            }
+                y if y < 0.0 => -(y * 2.0),
+                y => -(y / 2.0),
+            },
             _ => continue,
         };
         if adjusted_finger_y > window_height {
