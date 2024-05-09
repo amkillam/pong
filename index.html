@@ -19,16 +19,16 @@
 }
 </style>
     
-<link rel="modulepreload" href="./pong-cfccf77c40e15141.js" crossorigin=anonymous integrity="sha384-L03rtxyeA7nOOkrM4qbD/wGxgkmvCWrAGnso8LSscp6mOaGVal/dCove8mLhLB9Z">
-<link rel="preload" href="./pong-cfccf77c40e15141_bg.wasm" crossorigin=anonymous integrity="sha384-QMtX02d0GcrHQsSoIyMSi3A4CPEwVZHYUnvTVhiuGpc4OvOOUCykk/os7lLo0E/0" as="fetch" type="application/wasm"></head>
+<link rel="modulepreload" href="./pong-595a5040f557eae5.js" crossorigin=anonymous integrity="sha384-BQJsWgAaPkeC6SqJ03BaBNky6zVPBurfArD+8PvPBVD+nL5XhgR+rBR6NXcW3K4l">
+<link rel="preload" href="./pong-595a5040f557eae5_bg.wasm" crossorigin=anonymous integrity="sha384-vk5Qz2a71P2K6A25OLENExG65pO/n5c71zkZJtB2LGg8b0Fh0wqDbWIDhAuEnEC4" as="fetch" type="application/wasm"></head>
     <body>
         <canvas id="pong">
             Javascript and support for canvas is required
         </canvas>
     
 <script type="module">
-import init, * as bindings from './pong-cfccf77c40e15141.js';
-const wasm = await init('./pong-cfccf77c40e15141_bg.wasm');
+import init, * as bindings from './pong-595a5040f557eae5.js';
+const wasm = await init('./pong-595a5040f557eae5_bg.wasm');
 
 
 window.wasmBindings = bindings;
