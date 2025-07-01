@@ -2,8 +2,7 @@ use crate::{
     get_window_dimensions, setup::setup_game, Ball, Border, Paddle, Score, Side, Velocity,
     BALL_RADIUS, PADDLE_HEIGHT, PADDLE_MARGIN, PADDLE_WIDTH,
 };
-use bevy::input::touch::TouchPhase;
-use bevy::prelude::*;
+use bevy::{prelude::*, input::touch::TouchPhase, ui::{Node, Val, UiRect}};
 use rand::Rng;
 
 pub fn move_paddles_with_keyboard(
@@ -53,8 +52,8 @@ pub fn move_ball(
     let ball_max_y = half_window_height - BALL_RADIUS;
 
     for (mut ball_transform, mut ball_velocity) in ball_query.iter_mut() {
-        ball_transform.translation.x += ball_velocity.x * time.delta_seconds();
-        ball_transform.translation.y += ball_velocity.y * time.delta_seconds();
+        ball_transform.translation.x += ball_velocity.x * time.delta_secs();
+        ball_transform.translation.y += ball_velocity.y * time.delta_secs();
 
         // Bounce the ball off the top and bottom of the screen
         if ball_transform.translation.y < -ball_max_y || ball_transform.translation.y > ball_max_y {
@@ -78,9 +77,10 @@ pub fn move_ball(
 }
 
 pub fn check_new_goal(
-    mut score_display: Query<(&mut Score, &mut Text)>,
+    mut score_display: Query<(&mut Score, Entity), With<Text>>,
     mut ball_query: Query<(&mut Transform, &mut Velocity), With<Ball>>,
     windows: Query<&Window>,
+    mut text_writer: TextUiWriter,
 ) {
     let (half_window_width, half_window_height) =
         get_window_dimensions(windows.iter().next().unwrap());
@@ -90,17 +90,17 @@ pub fn check_new_goal(
         if ball_transform.translation.x < -ball_limit || ball_transform.translation.x > ball_limit {
             // Increment the score based on which side the ball went past
             if ball_transform.translation.x < -ball_limit {
-                for (mut score, mut text) in score_display.iter_mut() {
+                for (mut score, text_entity) in score_display.iter_mut() {
                     if score.side == Side::Right {
                         score.value += 1;
-                        text.sections[0].value = score.value.to_string();
+                        *text_writer.text(text_entity, 0) = score.value.to_string();
                     }
                 }
             } else if ball_transform.translation.x > ball_limit {
-                for (mut score, mut text) in score_display.iter_mut() {
+                for (mut score, text_entity) in score_display.iter_mut() {
                     if score.side == Side::Left {
                         score.value += 1;
-                        text.sections[0].value = score.value.to_string();
+                        *text_writer.text(text_entity, 0) = score.value.to_string();
                     }
                 }
             }
@@ -147,40 +147,47 @@ pub fn game_over(
                 commands.entity(entity).despawn();
             }
 
-            let text_style_style = Style {
-                position_type: PositionType::Absolute,
-                margin: UiRect {
-                    left: Val::Px(half_window_width - 200.0),
-                    right: Val::Px(0.0),
-                    bottom: Val::Px(0.0),
-                    top: Val::Px(half_window_height - 100.0),
+            commands.spawn((
+                Text::new(
+                    format!("P{} wins!", u8::from(score.side == Side::Left) + 1),
+                ),
+                TextFont {
+                    font_size: 40.0,
+                    ..default()
                 },
-                ..Default::default()
-            };
-
-            let text_style = TextStyle {
-                font: Handle::default(),
-                font_size: 40.0,
-                color: Color::srgb(1.0, 1.0, 1.0),
-            };
-
-            commands.spawn(TextBundle {
-                text: Text {
-                    sections: vec![
-                        TextSection {
-                            value: format!("P{} wins!", u8::from(score.side == Side::Left) + 1,),
-                            style: text_style.clone(),
-                        },
-                        TextSection {
-                            value: "\r\rPress R to restart".to_string(),
-                            style: text_style,
-                        },
-                    ],
+                TextColor(Color::WHITE),
+                Node {
+                    position_type: PositionType::Absolute,
+                    margin: UiRect {
+                        left: Val::Px(half_window_width - 200.0),
+                        right: Val::Px(0.0),
+                        bottom: Val::Px(0.0),
+                        top: Val::Px(half_window_height - 100.0),
+                    },
                     ..Default::default()
                 },
-                style: text_style_style,
-                ..Default::default()
-            });
+            ));
+
+            commands.spawn((
+                Text::new(
+                    "Press R to restart".to_string(),
+                ),
+                TextFont {
+                    font_size: 40.0,
+                    ..default()
+                },
+                TextColor(Color::WHITE),
+                Node {
+                    position_type: PositionType::Absolute,
+                    margin: UiRect {
+                        left: Val::Px(half_window_width - 200.0),
+                        right: Val::Px(0.0),
+                        bottom: Val::Px(0.0),
+                        top: Val::Px(half_window_height - 50.0),
+                    },
+                    ..Default::default()
+                },
+            ));
         }
     }
 }

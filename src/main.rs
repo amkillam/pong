@@ -18,10 +18,10 @@ static GLOBAL: MiMalloc = MiMalloc;
 
 #[derive(Component)]
 pub struct Paddle {
-    side: Side,
+    pub side: Side,
 }
 
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Clone, Copy)]
 pub enum Side {
     Left,
     Right,
@@ -32,14 +32,14 @@ pub struct Ball;
 
 #[derive(Component)]
 pub struct Velocity {
-    x: f32,
-    y: f32,
+    pub x: f32,
+    pub y: f32,
 }
 
-#[derive(Component)]
+#[derive(Component, Clone, Copy)]
 pub struct Score {
-    value: u32,
-    side: Side,
+    pub value: u32,
+    pub side: Side,
 }
 
 #[derive(Component)]
@@ -54,13 +54,12 @@ fn main() {
     App::new()
         .add_plugins(DefaultPlugins.set(WindowPlugin {
             primary_window: Some(Window {
-                name: Some("Pong".to_string()),
                 title: "Pong".to_string(),
                 #[cfg(target_family = "wasm")]
                 canvas: Some("#pong".into()),
-                ..Default::default()
+                ..default()
             }),
-            ..Default::default()
+            ..default()
         }))
         .insert_resource(ClearColor(Color::srgb(0.0, 0.0, 0.0)))
         .add_systems(Startup, (set_window_icon, setup_camera, setup_game))

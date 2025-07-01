@@ -20,10 +20,6 @@ opt-level = "s"
 lto = "fat"
 codegen-units = 1
 panic = "abort"
-relocation-model = "static"
-code-model = "tiny"
-overflow-checks = false
-force-unwind-tables = "off"
 
 # Profile for distribution
 [profile.dist]
@@ -33,18 +29,17 @@ opt-level = 3
 lto = "fat"
 codegen-units = 1
 panic = "abort"
-code-model = "tiny"
-overflow-checks = false
-force-unwind-tables = "off"
 
 [dependencies]
 rand = "0.8.5"
 blake3 = { version = "1.5.1", features = ["pure"] }
 image = { version = "0.24", default-features = false }
-winit = { version = "0.30", default-features = false } # Re-added winit
+winit = { version = "0.30", default-features = false }
+uuid = "1.17.0"
+bevy_asset = { version = "0.16.0" }
 
 [dependencies.bevy]
-version = "0.15.3"
+version = "0.16.0"
 default-features = false
 features = [
   "bevy_asset",
@@ -63,7 +58,7 @@ features = [
 
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
 rand = "0.8.5"
-bevy = { version = "0.15.3", default-features = false, features = [
+bevy = { version = "0.16.0", default-features = false, features = [
   "bevy_asset",
   "bevy_core_pipeline",
   "bevy_render",
@@ -79,5 +74,6 @@ bevy = { version = "0.15.3", default-features = false, features = [
 ] }
 blake3 = { version = "1.5.1", features = ["pure"] }
 image = { version = "0.24", default-features = false }
-winit = { version = "0.30", default-features = false } # Re-added winit
+winit = { version = "0.30", default-features = false }
+uuid = "1.17.0"
 mimalloc = { version = "0.1.41" }
