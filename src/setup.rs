@@ -4,7 +4,9 @@ use bevy::winit::WinitWindows;
 use std::io::Cursor;
 use winit::window::Icon;
 
-use crate::{Ball, Border, Paddle, Score, Side, Velocity, PADDLE_MARGIN};
+use crate::{
+    Ball, Border, HitStreak, Paddle, Score, Side, Velocity, PADDLE_MARGIN, BALL_RADIUS, PADDLE_HEIGHT, PADDLE_WIDTH
+};
 
 // Sets the icon on windows and X11
 pub fn set_window_icon(
@@ -45,7 +47,7 @@ pub fn setup_game(mut commands: Commands, windows: Query<&Window>) {
         LEFT_PADDLE,
         Sprite {
             color: Color::srgb(1.0, 1.0, 1.0),
-            custom_size: Some(Vec2::new(10.0, 100.0)),
+            custom_size: Some(Vec2::new(PADDLE_WIDTH, PADDLE_HEIGHT)),
             ..default()
         },
         Transform::from_xyz(-paddle_x, 0.0, 0.1),
@@ -56,7 +58,7 @@ pub fn setup_game(mut commands: Commands, windows: Query<&Window>) {
         RIGHT_PADDLE,
         Sprite {
             color: Color::srgb(1.0, 1.0, 1.0),
-            custom_size: Some(Vec2::new(10.0, 100.0)),
+            custom_size: Some(Vec2::new(PADDLE_WIDTH, PADDLE_HEIGHT)),
             ..default()
         },
         Transform::from_xyz(paddle_x, 0.0, 0.1),
@@ -69,7 +71,7 @@ pub fn setup_game(mut commands: Commands, windows: Query<&Window>) {
         Ball,
         Sprite {
             color: Color::srgb(1.0, 1.0, 1.0),
-            custom_size: Some(Vec2::new(10.0, 10.0)),
+            custom_size: Some(Vec2::new(BALL_RADIUS * 2.0, BALL_RADIUS * 2.0)),
             ..default()
         },
         Transform::from_xyz(0.0, 0.0, 0.1),
@@ -77,6 +79,7 @@ pub fn setup_game(mut commands: Commands, windows: Query<&Window>) {
             x: quarter_window_width,
             y: quarter_window_height,
         },
+        HitStreak::default(), // Add the HitStreak component
     ));
 
     const LEFT_SCORE: Score = Score {

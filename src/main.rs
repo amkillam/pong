@@ -30,6 +30,11 @@ pub enum Side {
 #[derive(Component)]
 pub struct Ball;
 
+#[derive(Component, Default)]
+pub struct HitStreak {
+    pub count: u32,
+}
+
 #[derive(Component)]
 pub struct Velocity {
     pub x: f32,
