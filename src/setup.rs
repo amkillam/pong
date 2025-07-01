@@ -1,11 +1,16 @@
 use crate::get_window_dimensions;
-use bevy::{prelude::*, window::PrimaryWindow, ui::{Node, Val}};
 use bevy::winit::WinitWindows;
+use bevy::{
+    prelude::*,
+    ui::{Node, Val},
+    window::PrimaryWindow,
+};
 use std::io::Cursor;
 use winit::window::Icon;
 
 use crate::{
-    Ball, Border, HitStreak, Paddle, Score, Side, Velocity, PADDLE_MARGIN, BALL_RADIUS, PADDLE_HEIGHT, PADDLE_WIDTH
+    Ball, Border, HitStreak, Paddle, Score, Side, Velocity, BALL_RADIUS, PADDLE_HEIGHT,
+    PADDLE_MARGIN, PADDLE_WIDTH,
 };
 
 // Sets the icon on windows and X11
@@ -46,7 +51,7 @@ pub fn setup_game(mut commands: Commands, windows: Query<&Window>) {
     commands.spawn((
         LEFT_PADDLE,
         Sprite {
-            color: Color::srgb(1.0, 1.0, 1.0),
+            color: Color::srgb(0.0, 1.0, 1.0), // Neon Cyan
             custom_size: Some(Vec2::new(PADDLE_WIDTH, PADDLE_HEIGHT)),
             ..default()
         },
@@ -57,7 +62,7 @@ pub fn setup_game(mut commands: Commands, windows: Query<&Window>) {
     commands.spawn((
         RIGHT_PADDLE,
         Sprite {
-            color: Color::srgb(1.0, 1.0, 1.0),
+            color: Color::srgb(1.0, 0.0, 1.0), // Neon Magenta
             custom_size: Some(Vec2::new(PADDLE_WIDTH, PADDLE_HEIGHT)),
             ..default()
         },
@@ -70,7 +75,7 @@ pub fn setup_game(mut commands: Commands, windows: Query<&Window>) {
     commands.spawn((
         Ball,
         Sprite {
-            color: Color::srgb(1.0, 1.0, 1.0),
+            color: Color::srgb(1.0, 1.0, 0.0), // Electric Yellow
             custom_size: Some(Vec2::new(BALL_RADIUS * 2.0, BALL_RADIUS * 2.0)),
             ..default()
         },
@@ -89,14 +94,12 @@ pub fn setup_game(mut commands: Commands, windows: Query<&Window>) {
     // Spawn the left score
     commands.spawn((
         LEFT_SCORE,
-        Text::new(
-            "0".to_string(),
-        ),
+        Text::new("0".to_string()),
         TextFont {
             font_size: 100.0,
             ..default()
         },
-        TextColor(Color::srgb(1.0, 1.0, 1.0)),
+        TextColor(Color::srgb(0.8, 0.8, 0.8)), // Light Gray
         Node {
             position_type: PositionType::Absolute,
             left: Val::Percent(40.0),
@@ -112,14 +115,12 @@ pub fn setup_game(mut commands: Commands, windows: Query<&Window>) {
     // Spawn the right score
     commands.spawn((
         RIGHT_SCORE,
-        Text::new(
-            "0".to_string(),
-        ),
+        Text::new("0".to_string()),
         TextFont {
             font_size: 100.0,
             ..default()
         },
-        TextColor(Color::srgb(1.0, 1.0, 1.0)),
+        TextColor(Color::srgb(0.8, 0.8, 0.8)), // Light Gray
         Node {
             position_type: PositionType::Absolute,
             right: Val::Percent(40.0),
@@ -130,7 +131,7 @@ pub fn setup_game(mut commands: Commands, windows: Query<&Window>) {
 
     //draw border
     let border_thickness = 5.0;
-    let border_color = Color::srgb(1.0, 1.0, 1.0);
+    let border_color = Color::srgb(0.6, 0.6, 0.6); // Slightly darker gray for border
 
     // Draw the middle dashed line
     let dash_length = 5.0;

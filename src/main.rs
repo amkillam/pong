@@ -1,8 +1,10 @@
 use bevy::prelude::*;
 
+mod effects_system;
 mod setup;
 mod systems;
 
+use effects_system::EffectsPlugin;
 use setup::{set_window_icon, setup_camera, setup_game};
 use systems::{
     check_new_goal, game_over, move_ball, move_paddles_with_keyboard, move_paddles_with_touch,
@@ -36,6 +38,21 @@ pub struct HitStreak {
 }
 
 #[derive(Component)]
+pub struct Particle {
+    // Ensure this is public if accessed from particle_system.rs
+    pub lifetime: Timer,
+}
+
+#[derive(Component)]
+pub struct ScoreCelebration {
+    pub timer: Timer,
+    pub original_color: Color,
+    // We might not need original_font_size if we just flash color
+    // pub original_font_size: f32,
+    pub scored_side: Side, // To know which score text this belongs to
+}
+
+#[derive(Component)]
 pub struct Velocity {
     pub x: f32,
     pub y: f32,
@@ -66,7 +83,8 @@ fn main() {
             }),
             ..default()
         }))
-        .insert_resource(ClearColor(Color::srgb(0.0, 0.0, 0.0)))
+        .insert_resource(ClearColor(Color::srgb(0.1, 0.0, 0.3))) // Deep Purple background
+        .add_plugins(EffectsPlugin) // Changed from ParticlePlugin
         .add_systems(Startup, (set_window_icon, setup_camera, setup_game))
         .add_systems(
             Update,
