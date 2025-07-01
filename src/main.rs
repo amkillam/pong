@@ -62,7 +62,7 @@ fn main() {
             }),
             ..Default::default()
         }))
-        .insert_resource(ClearColor(Color::rgb(0.0, 0.0, 0.0)))
+        .insert_resource(ClearColor(Color::srgb(0.0, 0.0, 0.0)))
         .add_systems(Startup, (set_window_icon, setup_camera, setup_game))
         .add_systems(
             Update,

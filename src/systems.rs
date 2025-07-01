@@ -161,7 +161,7 @@ pub fn game_over(
             let text_style = TextStyle {
                 font: Handle::default(),
                 font_size: 40.0,
-                color: Color::rgb(1.0, 1.0, 1.0),
+                color: Color::srgb(1.0, 1.0, 1.0),
             };
 
             commands.spawn(TextBundle {
