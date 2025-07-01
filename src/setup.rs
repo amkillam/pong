@@ -1,16 +1,16 @@
 use crate::get_window_dimensions;
 use bevy::prelude::*;
 use bevy::window::PrimaryWindow;
-use bevy::winit::WinitWindows;
+use bevy::winit::WinitWindows; // Re-added
 use std::io::Cursor;
-use winit::window::Icon;
+use winit::window::Icon; // Re-added from winit that Bevy uses
 
 use crate::{Ball, Border, Paddle, Score, Side, Velocity, PADDLE_MARGIN};
 
 // Sets the icon on windows and X11
 pub fn set_window_icon(
-    windows: NonSend<WinitWindows>,
-    primary_window: Query<Entity, With<PrimaryWindow>>,
+    windows: NonSend<WinitWindows>, // Changed back
+    primary_window: Query<Entity, With<PrimaryWindow>>, // Changed back
 ) {
     let primary_entity = primary_window.single();
     let Some(primary) = windows.get_window(primary_entity) else {
@@ -21,8 +21,10 @@ pub fn set_window_icon(
         let image = image.into_rgba8();
         let (width, height) = image.dimensions();
         let rgba = image.into_raw();
-        let icon = Icon::from_rgba(rgba, width, height).unwrap();
-        primary.set_window_icon(Some(icon));
+        // Construct winit::window::Icon directly
+        if let Ok(icon) = Icon::from_rgba(rgba, width, height) {
+            primary.set_window_icon(Some(icon));
+        }
     };
 }
 
@@ -41,7 +43,7 @@ pub fn setup_game(mut commands: Commands, windows: Query<&Window>) {
     const RIGHT_PADDLE: Paddle = Paddle { side: Side::Right };
     let paddle_sprite: SpriteBundle = SpriteBundle {
         sprite: Sprite {
-            color: Color::rgb(1.0, 1.0, 1.0),
+            color: Color::srgb(1.0, 1.0, 1.0),
             custom_size: Some(Vec2::new(10.0, 100.0)),
             ..Default::default()
         },
@@ -67,7 +69,7 @@ pub fn setup_game(mut commands: Commands, windows: Query<&Window>) {
         .insert(Transform::from_xyz(0.0, 0.0, 0.1))
         .insert(SpriteBundle {
             sprite: Sprite {
-                color: Color::rgb(1.0, 1.0, 1.0),
+                color: Color::srgb(1.0, 1.0, 1.0),
                 custom_size: Some(Vec2::new(10.0, 10.0)),
                 ..Default::default()
             },
@@ -87,7 +89,7 @@ pub fn setup_game(mut commands: Commands, windows: Query<&Window>) {
         TextBundle::from_sections([TextSection {
             style: TextStyle {
                 font_size: 100.0,
-                color: Color::rgb(1.0, 1.0, 1.0),
+                color: Color::srgb(1.0, 1.0, 1.0),
                 ..Default::default()
             },
             value: "0".to_string(),
@@ -109,7 +111,7 @@ pub fn setup_game(mut commands: Commands, windows: Query<&Window>) {
         TextBundle::from_sections([TextSection {
             style: TextStyle {
                 font_size: 100.0,
-                color: Color::rgb(1.0, 1.0, 1.0),
+                color: Color::srgb(1.0, 1.0, 1.0),
                 ..Default::default()
             },
             value: "0".to_string(),
@@ -124,7 +126,7 @@ pub fn setup_game(mut commands: Commands, windows: Query<&Window>) {
 
     //draw border
     let border_thickness = 5.0;
-    let border_color = Color::rgb(1.0, 1.0, 1.0);
+    let border_color = Color::srgb(1.0, 1.0, 1.0);
 
     // Draw the middle dashed line
     let dash_length = 5.0;

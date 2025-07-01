@@ -40,11 +40,11 @@ force-unwind-tables = "off"
 [dependencies]
 rand = "0.8.5"
 blake3 = { version = "1.5.1", features = ["pure"] }
-winit = { version = "0.29", default-features = false }
 image = { version = "0.24", default-features = false }
+winit = { version = "0.30", default-features = false } # Re-added winit
 
 [dependencies.bevy]
-version = "0.13.2"
+version = "0.15.3"
 default-features = false
 features = [
   "bevy_asset",
@@ -63,7 +63,7 @@ features = [
 
 [target.'cfg(not(target_family = "wasm"))'.dependencies]
 rand = "0.8.5"
-bevy = { version = "0.13.2", default-features = false, features = [
+bevy = { version = "0.15.3", default-features = false, features = [
   "bevy_asset",
   "bevy_core_pipeline",
   "bevy_render",
@@ -78,6 +78,6 @@ bevy = { version = "0.13.2", default-features = false, features = [
   "x11",
 ] }
 blake3 = { version = "1.5.1", features = ["pure"] }
-winit = { version = "0.29", default-features = false }
 image = { version = "0.24", default-features = false }
+winit = { version = "0.30", default-features = false } # Re-added winit
 mimalloc = { version = "0.1.41" }
