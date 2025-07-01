@@ -9,7 +9,7 @@ use crate::{Ball, Border, Paddle, Score, Side, Velocity, PADDLE_MARGIN};
 
 // Sets the icon on windows and X11
 pub fn set_window_icon(
-    windows: NonSend<WinitWindows>, // Changed back
+    windows: NonSend<WinitWindows>,                     // Changed back
     primary_window: Query<Entity, With<PrimaryWindow>>, // Changed back
 ) {
     let primary_entity = primary_window.single();
